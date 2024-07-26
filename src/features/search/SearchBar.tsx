@@ -1,34 +1,17 @@
-// src/features/search/SearchBar.tsx
-import React, { useState } from 'react';
-import './SearchBar.module.css';
+// В SearchBar добавьте пропс для обработки изменений (onChange)
+import {useState} from "react";
 
-interface SearchBarProps {
-    onSubmit: (query: string) => void;
-}
+const SearchBar = ({ onSearch }) => {
+    const [input, setInput] = useState("");
 
-const SearchBar: React.FC<SearchBarProps> = ({ onSubmit }) => {
-    const [query, setQuery] = useState('');
-
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setPackageQuery(event.target.value);
-    };
-
-    const handleKeyPress = (event: React.KeyboardEvent) => {
-        if (event.key === 'Enter') {
-            onSubmit(query);
-        }
+    const handleSearch = () => {
+        onSearch(input);
     };
 
     return (
-        <div className="search-bar">
-            <input
-                type="text"
-                placeholder="Search repositories..."
-                value={query}
-                onChange={handleChange}
-                onKeyPress={handleKeyPress}
-                className="search-input"
-            />
+        <div>
+            <input value={input} onChange={(e) => setInput(e.target.value)} />
+            <button onClick={handleSearch}>Search</button>
         </div>
     );
 };
