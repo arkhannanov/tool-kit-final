@@ -26,22 +26,37 @@ const RepositoryList: React.FC = () => {
     useEffect(() => {
         if (data && data.search && data.search.nodes) {
             setRepositories(data.search.nodes);
+            // Установка курсора для текущей страницы и следующего курсора
+            if (data.search.pageInfo.hasNextPage) {
+                const newPageCursors = { ...pageCursors };
+                newPageCursors[currentPage + 1] = data.search.pageInfo.endCursor;
+                setPageCursors(newPageCursors);
+            }
+        }
+    }, [data]);
+
+
+    useEffect(() => {
+        if (data && data.search && data.search.nodes) {
+            setRepositories(data.search.nodes);
         }
     }, [data]);
 
     const goToPage = (page: number) => {
-
+        console.log(pageCursors)
         const cursorForPage = pageCursors[page];
         console.log(page, cursorForPage, pageCursors)
         setCursor(cursorForPage);
         setCurrentPage(page);
     };
+
     const handleSearch = (query: string) => {
         setCursor(null);
-        setPageCursors({ 1: null });
+        setPageCursors({ 1: null }); // Очищаем курсоры и стартуем с первой страницы
         setCurrentPage(1);
         setSearchQuery(query);
     };
+
 
     const renderPageNumbers = () => {
         if (!data || !data.search || !data.search.repositoryCount) return null;
@@ -63,9 +78,12 @@ const RepositoryList: React.FC = () => {
         <div className={styles.listWrapper}>
             <SearchBar onSearch={handleSearch} />
             {repositories.length > 0 ? (
-                repositories.map(repo => (
+                repositories.map(repo => {
+                    console.log(repo)
+                return (
                     <Repository key={repo.id} details={repo} />
-                ))
+                )
+                })
             ) : (
                 <div>No repositories found.</div>
             )}
