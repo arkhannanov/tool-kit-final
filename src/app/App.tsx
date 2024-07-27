@@ -1,13 +1,11 @@
-// src/App.tsx
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from "../ui/layout/Layout";
 import RepositoryList from "../features/repository-list/RepositoryList";
 import RepositoryDetail from "../features/repository-detail/RepositoryDetail";
 import SearchBar from "../features/search/SearchBar";
-import client from '../../src/api/graphqlClient'
-import {ApolloProvider} from "@apollo/client";
-
+import client from '../../src/api/graphqlClient';
+import { ApolloProvider } from "@apollo/client";
 
 const App = () => {
     return (
@@ -22,7 +20,7 @@ const App = () => {
                 </Layout>
             </Router>
         </ApolloProvider>
-    );
+    );  // Добавлена закрывающая скобка
 };
 
 export default App;

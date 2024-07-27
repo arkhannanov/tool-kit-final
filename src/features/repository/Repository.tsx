@@ -1,22 +1,24 @@
-// src/features/repository-list/Repository.tsx
 import React from 'react';
+import styles from './Repository.module.css';
 
 interface RepositoryProps {
     details: {
-        id: string;
         name: string;
         viewerHasStarred: boolean;
         stargazers: {
             totalCount: number;
         };
-    };
+        url: string;
+        pushedAt: string;
+    }
 }
 
 const Repository: React.FC<RepositoryProps> = ({ details }) => (
-    <div>
-        <h3>{details.name}</h3>
-        <p>{details.viewerHasStarred ? 'Starred' : 'Not starred'}</p>
+    <div className={styles.repositoryWrapper}>
+        <p>{details.name}</p>
         <p>Stars: {details.stargazers.totalCount}</p>
+        <p>Last Commit: {new Date(details.pushedAt).toLocaleDateString()}</p>
+        <p><a href={details.url}>Repository on GitHub</a></p>
     </div>
 );
 

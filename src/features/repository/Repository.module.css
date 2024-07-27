@@ -1,0 +1,5 @@
+.repositoryWrapper{
+    border: 1px solid black; /* Указываем solid и цвет рамки */
+    padding: 10px; /* добавим отступ для визуального удобства */
+    margin: 10px; /* и немного маржина */
+}
