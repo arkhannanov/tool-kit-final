@@ -1,3 +1,7 @@
 .listWrapper {
     align-self: center;
 }
+
+.pagination {
+    display: block;
+}

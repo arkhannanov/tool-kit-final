@@ -5,20 +5,23 @@ import SearchBar from "../search/SearchBar";
 import Repository from "../repository/Repository";
 import styles from "./RepositoryList.module.css";
 
-const PAGE_SIZE = 10; // Количество репозиториев на странице
+const PAGE_SIZE = 10;
 
 const RepositoryList: React.FC = () => {
     const [repositories, setRepositories] = useState<any[]>([]);
     const [searchQuery, setSearchQuery] = useState<string>("stars:>500");
     const [cursor, setCursor] = useState<string | null>(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageCursors, setPageCursors] = useState<{ [key: number]: string | null }>({ 1: null });
 
     const [loadRepositories, { loading, data }] = useLazyQuery(GET_REPOSITORIES, {
+        fetchPolicy: 'network-only',
         variables: { query: searchQuery, first: PAGE_SIZE, after: cursor }
     });
 
     useEffect(() => {
         loadRepositories();
-    }, [loadRepositories]);
+    }, [cursor, searchQuery, loadRepositories]);
 
     useEffect(() => {
         if (data && data.search && data.search.nodes) {
@@ -26,35 +29,49 @@ const RepositoryList: React.FC = () => {
         }
     }, [data]);
 
+    const goToPage = (page: number) => {
+
+        const cursorForPage = pageCursors[page];
+        console.log(page, cursorForPage, pageCursors)
+        setCursor(cursorForPage);
+        setCurrentPage(page);
+    };
     const handleSearch = (query: string) => {
-        setSearchQuery(query);
         setCursor(null);
-        loadRepositories({ variables: { query, first: PAGE_SIZE, after: null } });
+        setPageCursors({ 1: null });
+        setCurrentPage(1);
+        setSearchQuery(query);
     };
 
-    const goToNextPage = () => {
-        const pageInfo = data?.search?.pageInfo;
-        if (pageInfo && pageInfo.hasNextPage) {
-            const newCursor = pageInfo.endCursor;
-            setCursor(newCursor);
-            loadRepositories({ variables: { query: searchQuery, first: PAGE_SIZE, after: newCursor } });
-        }
-    };
+    const renderPageNumbers = () => {
+        if (!data || !data.search || !data.search.repositoryCount) return null;
+        const totalPages = Math.ceil(data.search.repositoryCount / PAGE_SIZE);
+        const pages = Array.from({ length: Math.min(10, totalPages) }, (_, i) => i + 1); // Ограничиваем максимум 10 страницами
 
-    if (loading) return <div>Loading...</div>;
-    if (!data || !repositories.length) return <div>Start searching...</div>;
+        return pages.map(page => (
+            <button
+                key={page}
+                onClick={() => goToPage(page)}
+                className={currentPage === page ? styles.active : ''}
+            >
+                {page}
+            </button>
+        ));
+    };
 
     return (
         <div className={styles.listWrapper}>
             <SearchBar onSearch={handleSearch} />
-            {repositories.map(repo => (
-                <Repository key={repo.id} details={repo} />
-            ))}
-            {data?.search?.pageInfo.hasNextPage && (
-                <button onClick={goToNextPage} className={styles.paginator}>
-                    Load More
-                </button>
+            {repositories.length > 0 ? (
+                repositories.map(repo => (
+                    <Repository key={repo.id} details={repo} />
+                ))
+            ) : (
+                <div>No repositories found.</div>
             )}
+            <div className={styles.pagination}>
+                {renderPageNumbers()}
+            </div>
         </div>
     );
 };

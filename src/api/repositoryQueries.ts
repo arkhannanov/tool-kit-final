@@ -1,9 +1,10 @@
-// src/api/repositoryQueries.ts
+
 import { gql } from '@apollo/client';
 
 export const GET_REPOSITORIES = gql`
-  query getRepositories($query: String!) {
-    search(query: $query, type: REPOSITORY, first: 100) {
+  query getRepositories($query: String!, $first: Int = 10, $after: String) {
+    search(query: $query, type: REPOSITORY, first: $first, after: $after) {
+      repositoryCount
       pageInfo {
         hasNextPage
         endCursor
@@ -16,14 +17,14 @@ export const GET_REPOSITORIES = gql`
           stargazers {
             totalCount
           }
-          url  # Ссылка на GitHub
+          url 
           defaultBranchRef {
             target {
               ... on Commit {
                 history(first: 1) {
                   edges {
                     node {
-                      committedDate  # Дата последнего коммита
+                      committedDate 
                     }
                   }
                 }
@@ -35,6 +36,7 @@ export const GET_REPOSITORIES = gql`
     }
   }
 `;
+
 
 
 
