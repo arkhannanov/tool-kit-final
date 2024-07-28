@@ -26,7 +26,6 @@ const RepositoryList: React.FC = () => {
     useEffect(() => {
         if (data && data.search && data.search.nodes) {
             setRepositories(data.search.nodes);
-            // Установка курсора для текущей страницы и следующего курсора
             if (data.search.pageInfo.hasNextPage) {
                 const newPageCursors = { ...pageCursors };
                 newPageCursors[currentPage + 1] = data.search.pageInfo.endCursor;
@@ -43,7 +42,7 @@ const RepositoryList: React.FC = () => {
 
     const handleSearch = (query: string) => {
         setCursor(null);
-        setPageCursors({ 1: null }); // Очищаем курсоры и стартуем с первой страницы
+        setPageCursors({ 1: null });
         setCurrentPage(1);
         setSearchQuery(query);
     };

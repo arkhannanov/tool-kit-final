@@ -5,9 +5,6 @@ import RepositoryDetail from './RepositoryDetail';
 const RepositoryDetailWrapper: React.FC = () => {
     const { owner, name } = useParams<Record<string, string | undefined>>();
 
-    console.log(owner, name);
-
-    // Проверяем, что параметры существуют
     if (!owner || !name) {
         return <p>Error: Missing owner or name parameter.</p>;
     }

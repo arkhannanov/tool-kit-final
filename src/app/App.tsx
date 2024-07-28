@@ -32,7 +32,6 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
 const App = () => {
     const handleSearch = (query: string) => {
         console.log("Search query:", query);
-        // Здесь можно добавить логику поиска или перенаправление
     };
 
     return (
