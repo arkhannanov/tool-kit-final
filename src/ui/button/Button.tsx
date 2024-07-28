@@ -1,4 +1,3 @@
-// src/ui/button/Button.tsx
 import React from 'react';
 import './Button.module.css';
 
