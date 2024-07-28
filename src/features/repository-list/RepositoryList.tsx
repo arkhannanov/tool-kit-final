@@ -79,7 +79,7 @@ const RepositoryList: React.FC = () => {
             <SearchBar onSearch={handleSearch} />
             {repositories.length > 0 ? (
                 repositories.map(repo => {
-                    console.log(repo)
+                    console.log('ddd', repo)
                 return (
                     <Repository key={repo.id} details={repo} />
                 )

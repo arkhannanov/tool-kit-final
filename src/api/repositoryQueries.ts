@@ -17,14 +17,19 @@ export const GET_REPOSITORIES = gql`
           stargazers {
             totalCount
           }
-          url 
+          url
+          owner {
+            login
+            avatarUrl
+            url
+          }
           defaultBranchRef {
             target {
               ... on Commit {
                 history(first: 1) {
                   edges {
                     node {
-                      committedDate 
+                      committedDate
                     }
                   }
                 }
@@ -37,19 +42,28 @@ export const GET_REPOSITORIES = gql`
   }
 `;
 
-
-
-
-
 export const GET_REPOSITORY_DETAIL = gql`
-  query getRepositoryDetail($id: ID!) {
-    repository(id: $id) {
-      name
-      description
-      stargazers {
-        totalCount
-      }
-      forkCount
+query GetRepositoryDetail($owner: String!, $name: String!) {
+  repository(owner: $owner, name: $name) {
+    id
+    name
+    owner {
+      login
+      avatarUrl
+      url
     }
+    stargazerCount
+    updatedAt
+    languages(first: 10) {
+      edges {
+        node {
+          name
+        }
+      }
+    }
+    description
   }
+}
+
 `;
+

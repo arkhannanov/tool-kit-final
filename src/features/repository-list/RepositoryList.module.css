@@ -5,3 +5,7 @@
 .pagination {
     display: block;
 }
+.active {
+    color: red;
+    background: #535bf2;
+}
