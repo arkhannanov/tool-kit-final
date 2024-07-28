@@ -1,16 +1,12 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import RepositoryDetail from './RepositoryDetail'; // Путь может быть другим, в зависимости от структуры вашего проекта
-
-interface RouteParams {
-    owner: string;
-    name: string;
-}
+import RepositoryDetail from './RepositoryDetail';
 
 const RepositoryDetailWrapper: React.FC = () => {
-    const { owner, name } = useParams<RouteParams>();
+    const { owner, name } = useParams<Record<string, string | undefined>>();
 
-    console.log(owner, name)
+    console.log(owner, name);
+
     // Проверяем, что параметры существуют
     if (!owner || !name) {
         return <p>Error: Missing owner or name parameter.</p>;

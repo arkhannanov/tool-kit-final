@@ -1,6 +1,11 @@
 import React from 'react';
 import { useQuery, gql } from '@apollo/client';
-import client from "../../api/graphqlClient.ts";
+import client from "../../api/graphqlClient";
+
+interface RepositoryDetailProps {
+    owner: string;
+    name: string;
+}
 
 const GET_REPOSITORY_DETAIL = gql`
   query GetRepositoryDetail($owner: String!, $name: String!) {
@@ -23,7 +28,7 @@ const GET_REPOSITORY_DETAIL = gql`
   }
 `;
 
-const RepositoryDetail = ({ owner, name }) => {
+const RepositoryDetail: React.FC<RepositoryDetailProps> = ({ owner, name }) => {
     const { loading, error, data } = useQuery(GET_REPOSITORY_DETAIL, {
         variables: { owner, name },
         client,
@@ -46,7 +51,7 @@ const RepositoryDetail = ({ owner, name }) => {
             </p>
             <h3>Используемые языки:</h3>
             <ul>
-                {repository.languages.nodes.map((language) => (
+                {repository.languages.nodes.map((language: { name: string }) => (
                     <li key={language.name}>{language.name}</li>
                 ))}
             </ul>

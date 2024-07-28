@@ -14,7 +14,7 @@ const RepositoryList: React.FC = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [pageCursors, setPageCursors] = useState<{ [key: number]: string | null }>({ 1: null });
 
-    const [loadRepositories, { loading, data }] = useLazyQuery(GET_REPOSITORIES, {
+    const [loadRepositories, { data }] = useLazyQuery(GET_REPOSITORIES, {
         fetchPolicy: 'network-only',
         variables: { query: searchQuery, first: PAGE_SIZE, after: cursor }
     });
@@ -35,17 +35,8 @@ const RepositoryList: React.FC = () => {
         }
     }, [data]);
 
-
-    useEffect(() => {
-        if (data && data.search && data.search.nodes) {
-            setRepositories(data.search.nodes);
-        }
-    }, [data]);
-
     const goToPage = (page: number) => {
-        console.log(pageCursors)
         const cursorForPage = pageCursors[page];
-        console.log(page, cursorForPage, pageCursors)
         setCursor(cursorForPage);
         setCurrentPage(page);
     };
@@ -56,7 +47,6 @@ const RepositoryList: React.FC = () => {
         setCurrentPage(1);
         setSearchQuery(query);
     };
-
 
     const renderPageNumbers = () => {
         if (!data || !data.search || !data.search.repositoryCount) return null;
@@ -78,12 +68,9 @@ const RepositoryList: React.FC = () => {
         <div className={styles.listWrapper}>
             <SearchBar onSearch={handleSearch} />
             {repositories.length > 0 ? (
-                repositories.map(repo => {
-                    console.log('ddd', repo)
-                return (
+                repositories.map(repo => (
                     <Repository key={repo.id} details={repo} />
-                )
-                })
+                ))
             ) : (
                 <div>No repositories found.</div>
             )}
